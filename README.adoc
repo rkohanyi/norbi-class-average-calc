@@ -19,7 +19,7 @@ With it teachers can input students' test scores and record their grades in a fi
 The program asks the user to input
 
 . a class name,
-. the maximum points achievable on a test,
-. the points earned by a student (total points or by individual assignment).
+. the maximum points that can be scored on a test,
+. the points scored by a student (total points or by individual assignment).
 
 Multiple students' scores can be recorder after each other.

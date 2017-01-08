@@ -1,36 +1,54 @@
-# Asks for a max point and makes sure its a number
-while True:
+import sys
+
+OTOS_PERCENT = 81.0
+NEGYES_PERCENT = 71.0
+HARMAS_PERCENT = 61.0
+KETTES_PERCENT = 41.0
+
+GRADE_PERCENTS = {
+    '5': [81.0, 100.0],
+    '4': [71.0, 81.0],
+    '3': [61.0, 71.0],
+    '2': [41.0, 61.0],
+    '1': [0.0, 41.0],
+}
+
+GRADE_LABELS = {
+    'five': 'Ötös',
+    'four': 'Négyes',
+    'three': 'Hármas',
+    'two': 'Kettes',
+    'one': 'Egyes',
+}
+
+def get_class_name():
+    return input('Irja be az osztály nevét !\n')
+
+def get_max_point():
     try:
-        osztaly = input("Irja be az osztály nevét !        ")
-        maxPoint = int(input("Adja mag a maximálisan elérhető pontszámot        "))
-        break
+        return int(input('Adja mag a maximálisan elérhető pontszámot!\n'))
     except:
-        print("AZ NEM EGY SZÁM !!!!!!!!!")
+        print('Adjon meg számot!')
+        sys.exit(-1)
 
-# The rules of the marks
-otos = 81.0
-negyes = 71.0
-harmas = 61.0
-kettes = 41.0
+def get_curr_point():
+    return float(input('Adja meg a pontszámot vagy nyomjon entert az eredményhez!\n'))
 
-def readStatsFromFile():
-    mystat = open(osztaly + ".txt", "r")
+def readStatsFromFile(class_name):
+    mystat = open('{}.txt'.format(class_name))
     array = (mystat.read())
     mystat.close()
     stat = []
     atlag = 0
-
     for i in array:
         stat.append(i)
     for i in stat:
         atlag += int(i)
-
     egyesek = 0
     kettesek = 0
     harmasok = 0
     negyesek = 0
     otosok = 0
-
     for i in array:
         if i == "1":
             egyesek += 1
@@ -42,84 +60,112 @@ def readStatsFromFile():
             negyesek += 1
         elif i == "5":
             otosok += 1
-
     atlag2 = atlag / len(stat)
-    print("%s %s %s %.2f %s" % ("A", osztaly, "osztály jelenlegi átlaga", atlag2, "!"))
+    print("%s %s %s %.2f %s" % ("A", class_name, "osztály jelenlegi átlaga", atlag2, "!"))
     print("%d%s" % (egyesek, "db Egyes született!"))
     print("%d%s" % (kettesek, "db Kettes született!"))
     print("%d%s" % (harmasok, "db Hármas született!"))
     print("%d%s" % (negyesek, "db Négyes született!"))
     print("%d%s" % (otosok, "db Ötös született!"))
 
-def writeStatsToFile():
-    statisztika = open(osztaly + ".txt", "a+")
-    statisztika.writelines(jegyek())
+
+def writeStatsToFile(class_name, szazalek):
+    statisztika = open('{}.txt'.format(class_name), 'a+')
+    statisztika.writelines(jegyek(szazalek))
     statisztika.close()
 
-# A function that prints out the appropiate mark based on the ruleset
-def jegyek():
-    if otos < szazalek:
+
+def jegyek(szazalek):
+    for grade, limits in GRADE_PERCENTS.items():
+        lower_percent = limits[0]
+        upper_percent = limits[1]
+        if lower_percent < szazalek and upper_percent <= szazalek:
+            return grade
+    raise ValueError('Többet írtál be a maximum pontszámnál!')
+
+    if OTOS_PERCENT < szazalek:
         jegy = "5"
         return jegy
-    elif szazalek < otos and szazalek > negyes:
+    elif szazalek < OTOS_PERCENT and szazalek > NEGYES_PERCENT:
         jegy = "4"
         return jegy
-    elif szazalek < negyes and szazalek > harmas:
+    elif szazalek < NEGYES_PERCENT and szazalek > HARMAS_PERCENT:
         jegy = "3"
         return jegy
-    elif szazalek < harmas and szazalek > kettes:
+    elif szazalek < HARMAS_PERCENT and szazalek > KETTES_PERCENT:
         jegy = "2"
         return jegy
-    elif kettes >= szazalek:
+    elif KETTES_PERCENT >= szazalek:
         jegy = "1"
         return jegy
 
-def hanyas():
-    if otos < szazalek:
+
+def hanyas(szazalek):
+    if OTOS_PERCENT < szazalek:
         print("Ötös")
-    elif szazalek < otos and szazalek > negyes:
+    elif szazalek < OTOS_PERCENT and szazalek > NEGYES_PERCENT:
         print("Négyes")
-    elif szazalek < negyes and szazalek > harmas:
+    elif szazalek < NEGYES_PERCENT and szazalek > HARMAS_PERCENT:
         print("Hármas")
-    elif szazalek < harmas and szazalek > kettes:
+    elif szazalek < HARMAS_PERCENT and szazalek > KETTES_PERCENT:
         print("Kettes")
-    elif kettes >= szazalek:
+    elif KETTES_PERCENT >= szazalek:
         print("Egyes")
 
-def ponthatar():
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * otos / 100, 10), "Pont- ", round(maxPoint * 1, 10), "Pont =", " Ötös"))
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * negyes / 100, 10), "Pont- ", round(maxPoint * otos / 100, 10), "Pont =", " Négyes"))
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * harmas / 100, 10), "Pont- ", round(maxPoint * negyes / 100, 10), "Pont =", " Hármas"))
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * kettes / 100, 10), "Pont- ", round(maxPoint * harmas / 100, 10), "Pont =", " Kettes"))
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * 0, 10), "Pont- ", round(maxPoint * kettes / 100, 10), "Pont =", " Egyes"))
-ponthatar()
-# if its false the entire app stops
-breaker = True
-while breaker == True:
-    # resets the values
-    pontszam = 0
-    szazalek = 0
+
+def show_grading_scheme(maxPoint):
+
+    print("%.0f%s%.0f%s%s" % (round(maxPoint * OTOS_PERCENT / 100, 10), "Pont- ", round(maxPoint * 1, 10), "Pont =", " Ötös"))
+    print("%.0f%s%.0f%s%s" % (round(maxPoint * NEGYES_PERCENT / 100, 10), "Pont- ", round(maxPoint * OTOS_PERCENT / 100, 10), "Pont =", " Négyes"))
+    print("%.0f%s%.0f%s%s" % (round(maxPoint * HARMAS_PERCENT / 100, 10), "Pont- ", round(maxPoint * NEGYES_PERCENT / 100, 10), "Pont =", " Hármas"))
+    print("%.0f%s%.0f%s%s" % (round(maxPoint * KETTES_PERCENT / 100, 10), "Pont- ", round(maxPoint * HARMAS_PERCENT / 100, 10), "Pont =", " Kettes"))
+    print("%.0f%s%.0f%s%s" % (round(maxPoint * 0, 10), "Pont- ", round(maxPoint * KETTES_PERCENT / 100, 10), "Pont =", " Egyes"))
+
+def continuously_get_points():
     while True:
         try:
-            pontszam += float(input("Adja meg a pontszámot vagy nyomjon entert az eredményhez      "))
+            curr_point = get_curr_point()
         except:
-            szazalek = pontszam / maxPoint * 100
-            print("########################################################")
-            print(pontszam, end="")
-            print("Pont")
-            print("%.0f %s" % (round(szazalek), "%"))
-            hanyas()
-            print("########################################################")
-            writeStatsToFile()
-            readStatsFromFile()
-            print("########################################################")
+            break
 
-            again = input("again? y or n    ")
-            # calculation for the next stupid kid (same max points)
 
-            if again == "y":
-                break
-            # No more stupid kid closes the program
-            else:
-                breaker = False
-                break
+def continuously_record_student():
+    pass
+
+def is_there_another_student():
+    return 'y' == input("again? y or n!\n")
+
+def show_results(class_name, szazalek, pontszam, maxPoint):
+    szazalek = pontszam / maxPoint * 100
+    print("########################################################")
+    print(pontszam, end="")
+    print("Pont")
+    print("%.0f %s" % (round(szazalek), "%"))
+    hanyas(szazalek)
+    print("########################################################")
+    writeStatsToFile(class_name, szazalek)
+    readStatsFromFile(class_name)
+    print("########################################################")
+
+def main():
+    class_name = get_class_name()
+    maxPoint = get_max_point()
+    show_grading_scheme(maxPoint)
+    breaker = True
+    while breaker == True:
+        # resets the values
+        pontszam = 0
+        szazalek = 0
+        while True:
+            try:
+                pontszam = get_curr_point()      
+            except:
+                szazalek = pontszam / maxPoint * 100
+                show_results(class_name, szazalek, pontszam, maxPoint)
+                if is_there_another_student():
+                    break
+                else:
+                    breaker = False
+                    break
+
+main()
