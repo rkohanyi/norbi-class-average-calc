@@ -1,0 +1,25 @@
+:source-highlighter: coderay
+:icons: font
+
+= Norbi's Class Average Calculator
+
+== What is this?
+
+This code is used to give a refactoring demo to Codecoolers.
+
+The original code was written by Norbert Lugosi.
+He wrote it not long after he became a Codecooler.
+
+== What is it good for?
+
+With it teachers can input students' test scores and record their grades in a file.
+
+== What does it do?
+
+The program asks the user to input
+
+. a class name,
+. the maximum points achievable on a test,
+. the points earned by a student (total points or by individual assignment).
+
+Multiple students' scores can be recorder after each other.
