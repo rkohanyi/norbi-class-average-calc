@@ -85,19 +85,6 @@ def jegyek(szazalek):
     raise ValueError('Többet írtál be a maximum pontszámnál!')
 
 
-def hanyas(szazalek):
-    if OTOS_PERCENT < szazalek:
-        print("Ötös")
-    elif szazalek < OTOS_PERCENT and szazalek > NEGYES_PERCENT:
-        print("Négyes")
-    elif szazalek < NEGYES_PERCENT and szazalek > HARMAS_PERCENT:
-        print("Hármas")
-    elif szazalek < HARMAS_PERCENT and szazalek > KETTES_PERCENT:
-        print("Kettes")
-    elif KETTES_PERCENT >= szazalek:
-        print("Egyes")
-
-
 def show_grading_scheme(maxPoint):
 
     print("%.0f%s%.0f%s%s" % (round(maxPoint * OTOS_PERCENT / 100, 10), "Pont- ", round(maxPoint * 1, 10), "Pont =", " Ötös"))
@@ -126,7 +113,8 @@ def show_results(class_name, szazalek, pontszam, maxPoint):
     print(pontszam, end="")
     print("Pont")
     print("%.0f %s" % (round(szazalek), "%"))
-    hanyas(szazalek)
+    grade = jegyek(szazalek)
+    print(GRADE_LABELS[grade])
     print("########################################################")
     writeStatsToFile(class_name, szazalek)
     readStatsFromFile(class_name)
