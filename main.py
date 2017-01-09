@@ -16,6 +16,7 @@ GRADE_LABELS = {
     '1': 'Egyes',
 }
 
+
 def calc_percent(point, maxPoint):
     return point * maxPoint / 100
 
@@ -39,7 +40,7 @@ def get_curr_point():
     return float(user_input)
 
 
-def readStatsFromFile(class_name):
+def read_stats_from_file(class_name):
     mystat = open('{}.txt'.format(class_name))
     array = (mystat.read())
     mystat.close()
@@ -74,10 +75,10 @@ def readStatsFromFile(class_name):
     print("%d%s" % (otosok, "db Ötös született!"))
 
 
-def writeStatsToFile(class_name, szazalek):
-    statisztika = open('{}.txt'.format(class_name), 'a+')
-    statisztika.writelines(jegyek(szazalek))
-    statisztika.close()
+def write_grade_to_file(class_name, grade):
+    with open('{}.txt'.format(class_name), 'a+') as f:
+        f.write(grade)
+        f.close()
 
 
 def jegyek(szazalek):
@@ -102,18 +103,17 @@ def show_grading_scheme(maxPoint):
 def is_there_another_student():
     return 'y' == input("again? y or n!\n")
 
-def show_results(class_name, pontszam, maxPoint):
-    szazalek = calc_percent(pontszam, maxPoint)
-    print("########################################################")
-    print(pontszam, end="")
+
+def show_results(class_name, percent, sum_of_points, grade, maxPoint):
+    sep_line = '#' * 60 
+    print(sep_line)
+    print(sum_of_points, end="")
     print("Pont")
-    print("%.0f %s" % (round(szazalek), "%"))
-    grade = jegyek(szazalek)
+    print("%.0f %s" % (round(percent), "%"))
     print(GRADE_LABELS[grade])
-    print("########################################################")
-    writeStatsToFile(class_name, szazalek)
-    readStatsFromFile(class_name)
-    print("########################################################")
+    print(sep_line)
+    read_stats_from_file(class_name)
+    print(sep_line)
 
 
 def main():
@@ -124,7 +124,10 @@ def main():
     while True:
         point = get_curr_point()
         if point is None:
-            show_results(class_name, sum_of_points, maxPoint)
+            percent = calc_percent(sum_of_points, maxPoint)
+            grade = jegyek(percent)
+            write_grade_to_file(class_name, grade)
+            show_results(class_name, percent, sum_of_points, grade, maxPoint)
             if is_there_another_student():
                 sum_of_points = 0
             else:
