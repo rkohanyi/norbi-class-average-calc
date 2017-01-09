@@ -14,11 +14,11 @@ GRADE_PERCENTS = {
 }
 
 GRADE_LABELS = {
-    'five': 'Ötös',
-    'four': 'Négyes',
-    'three': 'Hármas',
-    'two': 'Kettes',
-    'one': 'Egyes',
+    '5': 'Ötös',
+    '4': 'Négyes',
+    '3': 'Hármas',
+    '2': 'Kettes',
+    '1': 'Egyes',
 }
 
 def get_class_name():
@@ -79,25 +79,10 @@ def jegyek(szazalek):
     for grade, limits in GRADE_PERCENTS.items():
         lower_percent = limits[0]
         upper_percent = limits[1]
-        if lower_percent < szazalek and upper_percent <= szazalek:
+        if lower_percent < szazalek and szazalek <= upper_percent:
+            print('na mi?', lower_percent, upper_percent, szazalek, grade)
             return grade
     raise ValueError('Többet írtál be a maximum pontszámnál!')
-
-    if OTOS_PERCENT < szazalek:
-        jegy = "5"
-        return jegy
-    elif szazalek < OTOS_PERCENT and szazalek > NEGYES_PERCENT:
-        jegy = "4"
-        return jegy
-    elif szazalek < NEGYES_PERCENT and szazalek > HARMAS_PERCENT:
-        jegy = "3"
-        return jegy
-    elif szazalek < HARMAS_PERCENT and szazalek > KETTES_PERCENT:
-        jegy = "2"
-        return jegy
-    elif KETTES_PERCENT >= szazalek:
-        jegy = "1"
-        return jegy
 
 
 def hanyas(szazalek):
