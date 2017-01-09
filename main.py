@@ -116,6 +116,13 @@ def show_results(class_name, percent, sum_of_points, grade, maxPoint):
     print(sep_line)
 
 
+def record_results(class_name, maxPoint, sum_of_points):
+    percent = calc_percent(sum_of_points, maxPoint)
+    grade = jegyek(percent)
+    write_grade_to_file(class_name, grade)
+    show_results(class_name, percent, sum_of_points, grade, maxPoint)
+
+
 def main():
     class_name = get_class_name()
     maxPoint = get_max_point()
@@ -124,10 +131,7 @@ def main():
     while True:
         point = get_curr_point()
         if point is None:
-            percent = calc_percent(sum_of_points, maxPoint)
-            grade = jegyek(percent)
-            write_grade_to_file(class_name, grade)
-            show_results(class_name, percent, sum_of_points, grade, maxPoint)
+            record_results(class_name, maxPoint, sum_of_points)
             if is_there_another_student():
                 sum_of_points = 0
             else:
