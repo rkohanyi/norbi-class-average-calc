@@ -6,10 +6,10 @@ HARMAS_PERCENT = 61.0
 KETTES_PERCENT = 41.0
 
 GRADE_PERCENTS = {
-    '5': [81.0, 100.0],
-    '4': [71.0, 81.0],
-    '3': [61.0, 71.0],
-    '2': [41.0, 61.0],
+    '5': [82.0, 100.0],
+    '4': [72.0, 81.0],
+    '3': [62.0, 71.0],
+    '2': [42.0, 61.0],
     '1': [0.0, 41.0],
 }
 
@@ -79,19 +79,19 @@ def jegyek(szazalek):
     for grade, limits in GRADE_PERCENTS.items():
         lower_percent = limits[0]
         upper_percent = limits[1]
-        if lower_percent < szazalek and szazalek <= upper_percent:
-            print('na mi?', lower_percent, upper_percent, szazalek, grade)
+        if lower_percent <= szazalek and szazalek <= upper_percent:
             return grade
     raise ValueError('Többet írtál be a maximum pontszámnál!')
 
 
 def show_grading_scheme(maxPoint):
-
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * OTOS_PERCENT / 100, 10), "Pont- ", round(maxPoint * 1, 10), "Pont =", " Ötös"))
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * NEGYES_PERCENT / 100, 10), "Pont- ", round(maxPoint * OTOS_PERCENT / 100, 10), "Pont =", " Négyes"))
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * HARMAS_PERCENT / 100, 10), "Pont- ", round(maxPoint * NEGYES_PERCENT / 100, 10), "Pont =", " Hármas"))
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * KETTES_PERCENT / 100, 10), "Pont- ", round(maxPoint * HARMAS_PERCENT / 100, 10), "Pont =", " Kettes"))
-    print("%.0f%s%.0f%s%s" % (round(maxPoint * 0, 10), "Pont- ", round(maxPoint * KETTES_PERCENT / 100, 10), "Pont =", " Egyes"))
+    for grade, limits in GRADE_PERCENTS.items():
+        lower = round(maxPoint * limits[0] / 100, 10)
+        upper = round(maxPoint * limits[1] / 100, 10)
+        label = GRADE_LABELS[grade]
+        sep1 = " Pont- "
+        sep2 = " Pont = "
+        print("%.0f%s%.0f%s%s" % (lower, sep1, upper, sep2, label))
 
 def continuously_get_points():
     while True:
