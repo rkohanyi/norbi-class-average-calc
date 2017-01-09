@@ -1,10 +1,5 @@
 import sys
 
-OTOS_PERCENT = 81.0
-NEGYES_PERCENT = 71.0
-HARMAS_PERCENT = 61.0
-KETTES_PERCENT = 41.0
-
 GRADE_PERCENTS = {
     '5': [82.0, 100.0],
     '4': [72.0, 81.0],
@@ -21,8 +16,13 @@ GRADE_LABELS = {
     '1': 'Egyes',
 }
 
+def calc_percent(point, maxPoint):
+    return point * maxPoint / 100
+
+
 def get_class_name():
     return input('Irja be az osztály nevét !\n')
+
 
 def get_max_point():
     try:
@@ -31,8 +31,13 @@ def get_max_point():
         print('Adjon meg számot!')
         sys.exit(-1)
 
+
 def get_curr_point():
-    return float(input('Adja meg a pontszámot vagy nyomjon entert az eredményhez!\n'))
+    user_input = input('Adja meg a pontszámot vagy nyomjon entert az eredményhez!\n')
+    if user_input is '':
+        return None
+    return float(user_input)
+
 
 def readStatsFromFile(class_name):
     mystat = open('{}.txt'.format(class_name))
@@ -93,22 +98,12 @@ def show_grading_scheme(maxPoint):
         sep2 = " Pont = "
         print("%.0f%s%.0f%s%s" % (lower, sep1, upper, sep2, label))
 
-def continuously_get_points():
-    while True:
-        try:
-            curr_point = get_curr_point()
-        except:
-            break
-
-
-def continuously_record_student():
-    pass
 
 def is_there_another_student():
     return 'y' == input("again? y or n!\n")
 
-def show_results(class_name, szazalek, pontszam, maxPoint):
-    szazalek = pontszam / maxPoint * 100
+def show_results(class_name, pontszam, maxPoint):
+    szazalek = calc_percent(pontszam, maxPoint)
     print("########################################################")
     print(pontszam, end="")
     print("Pont")
@@ -120,25 +115,22 @@ def show_results(class_name, szazalek, pontszam, maxPoint):
     readStatsFromFile(class_name)
     print("########################################################")
 
+
 def main():
     class_name = get_class_name()
     maxPoint = get_max_point()
     show_grading_scheme(maxPoint)
-    breaker = True
-    while breaker == True:
-        # resets the values
-        pontszam = 0
-        szazalek = 0
-        while True:
-            try:
-                pontszam = get_curr_point()      
-            except:
-                szazalek = pontszam / maxPoint * 100
-                show_results(class_name, szazalek, pontszam, maxPoint)
-                if is_there_another_student():
-                    break
-                else:
-                    breaker = False
-                    break
+    sum_of_points = 0
+    while True:
+        point = get_curr_point()
+        if point is None:
+            show_results(class_name, sum_of_points, maxPoint)
+            if is_there_another_student():
+                sum_of_points = 0
+            else:
+                break
+        else:
+            sum_of_points += point
+
 
 main()
